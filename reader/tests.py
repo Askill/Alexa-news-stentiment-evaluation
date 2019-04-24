@@ -3,8 +3,10 @@ from lxml import html
 import requests
 import re
 
-url="https://www.golem.de/news/tchap-forscher-gelingt-anmeldung-im-regierungschat-frankreichs-1904-140799.html"
-site = requests.get(url)
+searchURL = "https://suche.golem.de/search.php?l=10&q=gaming" 
+site = requests.get(searchURL)
 tree = html.fromstring(site.content)
-title = tree.xpath('//div[@class="formatted"]/p/text()')
-print(title)
+
+articles = tree.xpath('//span[@class="dh2 head2"]/text()')
+links = tree.xpath('//ol[@class="list-articles"]/li/header//@href')
+print(len(articles), len(links))
