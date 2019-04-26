@@ -4,44 +4,40 @@ from flask import Flask
 from flask_ask import Ask, request, session, question, statement
 import random
 import yaml
-import site as s
+import siteobj as site2
 
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 
-@ask.intent('Search',
-    mapping={'site': 'Site',  'searchTerm':'SearchTerm'},
+@ask.intent('GolemSearch',
+    mapping={'site': 'Site',  'searchTerm':'Topic'},
     default={'site': 'golem', 'searchTerm':''})
 def search(site, searchTerm):
     print(site, searchTerm)
 
-    if site == "golem":
-        obj = s.Golem()
-    elif site == "zeit":
-        obj = s.Zeit()
-    elif site == "welt":
-        obj = s.Welt()
-    else:
-        return statement("Es gab einen Fehler")
-    session.attributes["site"] = obj.url
+    obj = site2.Golem()
 
     articles, links = obj.search_article(searchTerm)
+
     session.attributes["lastSearch"] = links
-    antwort = "Für welchen der folgenden Artikel interessieren Sie sich?"
-    for i in range(0, len(articles)):
-        antwort += articles[i] + "..."
+    response = "Für welchen der folgenden Artikel interessieren Sie sich?"
+    for i in range(0, 5):
+        response += articles[i] 
 
-    return question(antwort)
+    return question(response)
 
-@ask.intent('Read',
-    mapping={'site': 'Site',  'activity':'Activity'},
-    default={'site': 'golem', 'activity':'read_headlines'})
-def read(site, activity):
-    print(site, activity)
-
+@ask.intent('News',
+    mapping={'site': 'Site'},
+    default={'site': 'golem'})
+def news(site):
+    print(site)
+    obj = site2.Golem()
+    news = obj.get_news()
     response = ""
+    for i in range(0, 5):
+        response += news[i] 
     return statement(response)
 
 @ask.intent('AMAZON.HelpIntent')
@@ -51,7 +47,7 @@ def help():
 
 @ask.launch
 def launch():
-    return read("golem", "read_headlines")
+    return search("golem", "gaming")
 
 @ask.session_ended
 def session_ended():
