@@ -14,7 +14,9 @@ logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 @ask.intent('searchon', mapping={'site': 'Site'}, default={'site': 'golem'})
 def search_on(site):
     try:
+
         session.attributes["siteName"] = site
+        print(session.attributes["siteName"])
     except: 
         print("error")
 
@@ -36,6 +38,8 @@ def search_for(searchTerm):
 
     if site == "golem":
         obj = site2.Golem()
+    elif site == "spiegel":
+        obj = site2.Spiegel()
     elif site is None:
         session.attributes["searchTerm"] = searchTerm
         session.attributes["lastCall"] = "searchfor"
@@ -48,7 +52,7 @@ def search_for(searchTerm):
     response = "Für welchen der folgenden Artikel interessieren Sie sich?"
 
     if len(articles) > 0:
-        for i in range(0, max(5, len(articles))):
+        for i in range(0, min(5, len(articles))):
             response += articles[i] 
     else:
         return question("Dazu konnte nichts gefunden werden. Möchten Sie nach etwas anderem Suchen?")
@@ -59,34 +63,58 @@ def search_for(searchTerm):
 
 @ask.intent('News', mapping={'site': 'Site'}, default={'site': ''})
 def news(site):
-
+    try:
+        site = site.lower()
+        session.attributes["siteName"] = site
+    except: 
+        print("error")
+    print(site)
     if site == "golem":
         obj = site2.Golem()
+    elif site == "spiegel":
+        obj = site2.Spiegel()
     elif site == '':
         session.attributes["lastCall"] = "news"
         return question("Auf welcher Seite wollen Sie hiernach Suchen?")
     else:
         return statement("error")
 
-    news = obj.get_news()
+    news, links = obj.get_news()
+    print(news)
+    session.attributes["lastSearch"] = links
 
     response = ""
-    for i in range(0, 5):
+    for i in range(0, min(5, len(news))):
         response += news[i] + ". "
 
     session.attributes["lastCall"] = "news"
-    return statement(response)
+    return question(response)
 
 @ask.intent('SearchTwo', mapping={'number': 'Nummer'}, default={'number': 1})
 def search_answer(number):
-    print(number)
-    obj = site2.Golem()
+    try:
+        site = session.attributes["siteName"]
+    except:
+        site = None
 
-    art = obj.read_headlines(session.attributes["lastSearch"][int(number)-1])
+    if site == "golem":
+        obj = site2.Golem()
+    elif site == "spiegel":
+        obj = site2.Spiegel()
+
+    links = session.attributes["lastSearch"]
+
+    newLinks = []
+    for link in links:
+        if "http" not in link:
+            newLinks.append(obj.baseURL + link)
+    links = newLinks
+
+    art = obj.read_headlines(links[int(number)-1])
     response = ""
     for element in art:
         response +=  element + "   "
-
+    print(links)
     session.attributes["lastCall"] = "search2"
     return statement(response)
 
