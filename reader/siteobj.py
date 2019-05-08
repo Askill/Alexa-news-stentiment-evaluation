@@ -59,24 +59,24 @@ class Golem(Site):
     siteName = "golem"
     baseURL = "https://www.golem.de/"   
     searchURLString = "https://suche.golem.de/search.php?l=10&q="
-
-    Site.xPath["searchArticle"] = '//span[@class="dh2 head2"]/text()'
-    Site.xPath["searchLinks"] = '//ol[@class="list-articles"]/li/header//@href'
-    Site.xPath["newsArticle"] = '//li//h2/text()'
-    Site.xPath["newsLinks"] = '//header[@class="cluster-header"]//@href'
-    Site.xPath["readHeadlineTitle"] = '//header/h1/span[@class="dh1 head5"]/text()'
-    Site.xPath["readHeadlineText"] = '//header/p/text()'
-    Site.xPath["readArticleText"] = '//div[@class="formatted"]/p/text()'
+    xPath = dict()
+    xPath["searchArticle"] = '//span[@class="dh2 head2"]/text()'
+    xPath["searchLinks"] = '//ol[@class="list-articles"]/li/header//@href'
+    xPath["newsArticle"] = '//li//h2/text()'
+    xPath["newsLinks"] = '//div[@class="g g4"]//header//@href'
+    xPath["readHeadlineTitle"] = '//header/h1/span[@class="dh1 head5"]/text()'
+    xPath["readHeadlineText"] = '//header/p/text()'
+    xPath["readArticleText"] = '//div[@class="formatted"]/p/text()'
 
 class Spiegel(Site):
     siteName = "spiegel"
     baseURL = "https://www.spiegel.de/"   
     searchURLString = "https://www.spiegel.de/suche/?suchbegriff="
-
-    Site.xPath["searchArticle"] = '//span[@class="dh2 head2"]/text()'
-    Site.xPath["searchLinks"] = '//ol[@class="list-articles"]/li/header//@href'
-    Site.xPath["newsArticle"] = '//div[@class="column-wide pano_xxl"]//div[@class="teaser"]//h2[@class="article-title"]//span[@class="headline"]/text()'
-    Site.xPath["newsLinks"] = '//div[@class="column-wide pano_xxl"]//div[@class="teaser"]//h2[@class="article-title"]//@href'
-    Site.xPath["readHeadlineTitle"] = '//div[@class="column-both"]//span[@class="headline"]//text()'
-    Site.xPath["readHeadlineText"] = '//div[@class="column-both"]/p/strong/text()'
-    Site.xPath["readArticleText"] = '//div[@class="formatted"]/p/text()'
+    xPath = dict()
+    xPath["searchArticle"] = '//div[@class="search-teaser"]/p/text()'
+    xPath["searchLinks"] = '//div[@class="search-teaser"]/p//@href'
+    xPath["newsArticle"] = '//div[@class="column-wide pano_xxl"]//div[@class="teaser"]//h2[@class="article-title"]//span[@class="headline"]/text()'
+    xPath["newsLinks"] = '//div[@class="column-wide pano_xxl"]//div[@class="teaser"]//h2[@class="article-title"]//@href'
+    xPath["readHeadlineTitle"] = '//div[@class="column-both"]//span[@class="headline"]//text()'
+    xPath["readHeadlineText"] = '//div[@class="column-both"]/p/strong/text()'
+    xPath["readArticleText"] = '//div[@class="article-section clearfix"]/p/text()'

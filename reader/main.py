@@ -14,7 +14,6 @@ logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 @ask.intent('searchon', mapping={'site': 'Site'}, default={'site': 'golem'})
 def search_on(site):
     try:
-
         session.attributes["siteName"] = site
         print(session.attributes["siteName"])
     except: 
@@ -38,7 +37,7 @@ def search_for(searchTerm):
 
     if site == "golem":
         obj = site2.Golem()
-    elif site == "spiegel":
+    elif site.lower() == "spiegel":
         obj = site2.Spiegel()
     elif site is None:
         session.attributes["searchTerm"] = searchTerm
@@ -64,14 +63,13 @@ def search_for(searchTerm):
 @ask.intent('News', mapping={'site': 'Site'}, default={'site': ''})
 def news(site):
     try:
-        site = site.lower()
         session.attributes["siteName"] = site
     except: 
         print("error")
     print(site)
     if site == "golem":
         obj = site2.Golem()
-    elif site == "spiegel":
+    elif site.lower() == "spiegel":
         obj = site2.Spiegel()
     elif site == '':
         session.attributes["lastCall"] = "news"
@@ -96,25 +94,25 @@ def search_answer(number):
         site = session.attributes["siteName"]
     except:
         site = None
-
+    print(number)
     if site == "golem":
         obj = site2.Golem()
-    elif site == "spiegel":
+    elif site.lower() == "spiegel":
         obj = site2.Spiegel()
 
     links = session.attributes["lastSearch"]
-
-    newLinks = []
-    for link in links:
-        if "http" not in link:
-            newLinks.append(obj.baseURL + link)
-    links = newLinks
+    if "http" not in str(links):
+        newLinks = []
+        for link in links:
+            if "http" not in link:
+                newLinks.append(obj.baseURL + link)
+        links = newLinks
 
     art = obj.read_headlines(links[int(number)-1])
     response = ""
     for element in art:
-        response +=  element + "   "
-    print(links)
+        response +=  element 
+
     session.attributes["lastCall"] = "search2"
     return statement(response)
 
