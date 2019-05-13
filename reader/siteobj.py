@@ -46,10 +46,12 @@ class Site:
         title += tree.xpath(self.xPath["readHeadlineText"])
         return title
 
+    # not used, who wants to listen to alexa for 10 minutes?
     def read_article(self, url):
         site = requests.get(url)
         tree = html.fromstring(site.content)
 
+        # may need to be reworked
         title = self.read_headlines(url)
         title += tree.xpath(self.xPath["readArticleText"])
         return title

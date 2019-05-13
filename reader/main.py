@@ -5,102 +5,113 @@ from flask_ask import Ask, request, session, question, statement
 import random
 import yaml
 import siteobj as site2
+import util
 
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
+###           ###
+#    Helper     #
+###           ###
+
+def get_site_obj(site):
+    if site == "golem":
+        obj = site2.Golem()
+    elif site.lower() == "spiegel":
+        obj = site2.Spiegel()
+    else:
+        obj = None
+    return obj
+
+###              ###
+#    CONTROLLER    #
+###              ###
 
 @ask.intent('searchon', mapping={'site': 'Site'}, default={'site': 'golem'})
 def search_on(site):
-    try:
-        session.attributes["siteName"] = site
-        print(session.attributes["siteName"])
-    except: 
-        print("error")
+    session.attributes["siteName"] = site
 
-    if "searchTerm" in session.attributes and session.attributes["searchTerm"] is not None and "lastCall" in session.attributes and session.attributes["lastCall"] == "searchfor":
+    if not util.session_value_is(session.attributes, "searchTerm", None) and util.session_value_is(session.attributes, "lastCall", "searchfor"):
         searchTerm = session.attributes["searchTerm"]
-        session.attributes["searchTerm"] = None
         return search_for(searchTerm)
-    if "lastCall" in session.attributes and session.attributes["lastCall"] == "news":
+
+    if util.session_value_is(session.attributes, "lastCall", "news"):
         return news(site)
+
     session.attributes["lastCall"] = "searchon"
     return question("Wonach?")
 
 @ask.intent('searchfor', mapping={'searchTerm':'Topic'}, default={'searchTerm':''})
 def search_for(searchTerm):
-    try:
-        site = session.attributes["siteName"]
-    except:
-        site = None
+    site = util.get_session_value(session.attributes, "siteName")
 
-    if site == "golem":
-        obj = site2.Golem()
-    elif site.lower() == "spiegel":
-        obj = site2.Spiegel()
-    elif site is None:
+    if site is not None:
+        obj = get_site_obj(site) 
+    else:
         session.attributes["searchTerm"] = searchTerm
         session.attributes["lastCall"] = "searchfor"
         return question("Auf welcher Seite wollen Sie hiernach Suchen?")
-    else:
-        return statement("error")
+
+    if obj is None: # should never be called
+        return question("Error. Auf welcher Seite wollen Sie hiernach suchen?")
 
     articles, links = obj.search_article(searchTerm)
-    session.attributes["lastSearch"] = links
-    response = "Für welchen der folgenden Artikel interessieren Sie sich?"
 
+    session.attributes["lastSearch"] = links
+    session.attributes["lastCall"] = "searchfor"
+
+    response = "Für welchen der folgenden Artikel interessieren Sie sich?"
     if len(articles) > 0:
         for i in range(0, min(5, len(articles))):
             response += articles[i] 
     else:
         return question("Dazu konnte nichts gefunden werden. Möchten Sie nach etwas anderem Suchen?")
 
-    session.attributes["lastCall"] = "searchfor"
 
     return question(response + "noch etwas?")
 
 @ask.intent('News', mapping={'site': 'Site'}, default={'site': ''})
 def news(site):
-    try:
-        session.attributes["siteName"] = site
-    except: 
-        print("error")
-    print(site)
-    if site == "golem":
-        obj = site2.Golem()
-    elif site.lower() == "spiegel":
-        obj = site2.Spiegel()
-    elif site == '':
+    site = util.get_session_value(session.attributes, "siteName")
+
+    if site is not None:
+        obj = get_site_obj(site) 
+    else:
         session.attributes["lastCall"] = "news"
         return question("Auf welcher Seite wollen Sie hiernach Suchen?")
-    else:
+
+    if obj is None:
         return statement("error")
 
     news, links = obj.get_news()
-    print(news)
-    session.attributes["lastSearch"] = links
 
+    session.attributes["lastSearch"] = links
+    session.attributes["lastCall"] = "news"
+    
     response = ""
     for i in range(0, min(5, len(news))):
         response += news[i] + ". "
 
-    session.attributes["lastCall"] = "news"
     return question(response)
 
 @ask.intent('SearchTwo', mapping={'number': 'Nummer'}, default={'number': 1})
 def search_answer(number):
-    try:
-        site = session.attributes["siteName"]
-    except:
-        site = None
-    print(number)
-    if site == "golem":
-        obj = site2.Golem()
-    elif site.lower() == "spiegel":
-        obj = site2.Spiegel()
+    site = util.get_session_value(session.attributes, "siteName")
 
-    links = session.attributes["lastSearch"]
+    if site is not None:
+        obj = get_site_obj(site) 
+    else:
+        session.attributes["lastCall"] = "search_answer"
+        return question("Wonach wollen Sie suchen?")
+
+    if obj is None: # should never be called
+        return question("Error. Wonach wollen Sie suchen?")
+
+
+    links = util.get_session_value(session.attributes, "lastSearch")
+
+    # if the site uses relative links, make absolute ones
     if "http" not in str(links):
         newLinks = []
         for link in links:
