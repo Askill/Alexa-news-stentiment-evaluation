@@ -11,4 +11,4 @@ Supports: Spiegel.de, Golem.de
 
 
 ### Interaction Flow:
-![Interaction Flow](./Images/flow.png)
+![Interaction Flow](./Images/Flow.png)
