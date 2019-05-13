@@ -5,9 +5,9 @@ Supports: Spiegel.de, Golem.de
 
 1. in siteobj.py create a new class for your Site
 2. Follow the examples for Golem or Spiegel
-3. fill the xPath Dict with the needed xPath Expression
+3. fill the xPath Dict with the needed xPath expressions
 4. update the get_site_obj() in main.py
-5. exapnd the "Site" type in den Amazon developer console
+5. exapnd the "Site" type in the Amazon developer console
 
 
 ### Interaction Flow:
