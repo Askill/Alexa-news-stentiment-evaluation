@@ -1,4 +1,5 @@
 import logging
+from OpenSSL import SSL
 import os
 from flask import Flask
 from flask_ask import Ask, request, session, question, statement
@@ -150,4 +151,11 @@ if __name__ == '__main__':
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
             app.config['ASK_VERIFY_REQUESTS'] = False
-    app.run()
+
+
+    context = SSL.Context(SSL.TLSv1_2_METHOD)
+    cer = os.path.join(os.path.dirname(__file__), 'certificate.pem')
+    key = os.path.join(os.path.dirname(__file__), 'privkey.pem')
+    context = (cer, key)
+    
+    app.run(host='127.0.0.1',port=443,ssl_context=context)

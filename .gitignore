@@ -1,2 +1,12 @@
 
 reader/ngrok\.exe
+
+alexa\.jopa\.dev\.csr
+
+alexa\.jopa\.dev\.key
+
+certificate\.pem
+
+privkey\.pem
+
+reader/cert/certificate\.crt
