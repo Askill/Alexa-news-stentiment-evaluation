@@ -1,8 +1,6 @@
 import urllib.request,urllib.parse,urllib.error
 from lxml import html
 import requests
-import re
-
 
 class Site:
     siteName = ""     

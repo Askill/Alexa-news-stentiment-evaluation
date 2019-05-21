@@ -1,1 +1,0 @@
-openssl req -newkey rsa:2048 -nodes -keyout privkey.pem -x509 -days 365 -out certificate.pem -subj "/C=US/ST=NRW/L=Earth/O=CompanyName/OU=IT/CN=alexa.jopa.dev"

@@ -1,9 +1,7 @@
 import logging
-from OpenSSL import SSL
 import os
 from flask import Flask
 from flask_ask import Ask, request, session, question, statement
-import random
 import yaml
 import siteobj as site2
 import util
@@ -158,4 +156,4 @@ if __name__ == '__main__':
     key = os.path.join(os.path.dirname(__file__), 'privkey.pem')
     context = (cer, key)
     
-    app.run(host='127.0.0.1',port=443,ssl_context=context)
+    app.run(host='127.0.0.1',port=443)
