@@ -3,6 +3,8 @@ import os
 from flask import Flask
 from flask_ask import Ask, request, session, question, statement
 import yaml
+from nltk.corpus import treebank
+from textblob_de import TextBlobDE as TextBlob
 import siteobj as site2
 import util
 
@@ -126,6 +128,40 @@ def search_answer(number):
     session.attributes["lastCall"] = "search2"
     return statement(response)
 
+
+@ask.intent('Senti', mapping={'number': 'Nummer'}, default={'number': 1})
+def get_sentiment(number):
+    site = util.get_session_value(session.attributes, "siteName")
+
+    if site is not None:
+        obj = get_site_obj(site) 
+    else:
+        session.attributes["lastCall"] = "senti"
+        return question("Wonach wollen Sie suchen?")
+
+    if obj is None: # should never be called
+        return question("Error. Wonach wollen Sie suchen?")
+
+
+    links = util.get_session_value(session.attributes, "lastSearch")
+
+    url = links[int(number)-1]
+    NewsText = obj.read_article(url)
+
+    newText = ""
+    for text in NewsText:
+            newText += text
+
+    newText = TextBlob(newText)
+    sent = newText.sentiment[0] 
+
+    if sent < 0:
+            good = "shit"
+    else:
+            good = "nice" 
+
+    return statement(good)
+
 @ask.intent('AMAZON.HelpIntent')
 def help():
     speech_text = 'Dieser Skill erlaubt es Ihnen einige Nachrichten Websites zu nutzen'
@@ -149,11 +185,5 @@ if __name__ == '__main__':
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
             app.config['ASK_VERIFY_REQUESTS'] = False
-
-
-    context = SSL.Context(SSL.TLSv1_2_METHOD)
-    cer = os.path.join(os.path.dirname(__file__), 'certificate.pem')
-    key = os.path.join(os.path.dirname(__file__), 'privkey.pem')
-    context = (cer, key)
     
     app.run(host='127.0.0.1',port=443)

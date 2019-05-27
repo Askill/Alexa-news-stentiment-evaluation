@@ -5,3 +5,5 @@ nltk
 lxml
 urllib
 yaml
+pip install -U textblob-de
+python -m textblob.download_corpora
