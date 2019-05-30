@@ -1,0 +1,261 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "testing",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": [
+                        "schnauze",
+                        "ruhe ",
+                        "halt",
+                        "stop"
+                    ]
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "tschüss",
+                        "danke",
+                        "stop"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "searchfor",
+                    "slots": [
+                        {
+                            "name": "Topic",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "ja {Topic}",
+                        "ja nach {Topic}",
+                        "{Topic} zusammengefasst",
+                        "zu {Topic} ",
+                        "zu {Topic} zusammengefasst",
+                        "suche nach {Topic} ",
+                        "suche nach {Topic} zusammengefasst"
+                    ]
+                },
+                {
+                    "name": "News",
+                    "slots": [
+                        {
+                            "name": "Site",
+                            "type": "Site"
+                        }
+                    ],
+                    "samples": [
+                        "gib mir die Nachrichten auf {Site}",
+                        "gib mir die Nachrichten bei {Site}",
+                        "was gibt es neues bei {Site}"
+                    ]
+                },
+                {
+                    "name": "SearchTwo",
+                    "slots": [
+                        {
+                            "name": "Nummer",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "die {Nummer}",
+                        "fasse {Nummer} zusammen",
+                        "ließ {Nummer}",
+                        "fasse den {Nummer} Artikel zusammen",
+                        "ließ den {Nummer}"
+                    ]
+                },
+                {
+                    "name": "searchon",
+                    "slots": [
+                        {
+                            "name": "Site",
+                            "type": "Site"
+                        }
+                    ],
+                    "samples": [
+                        "auf {Site}",
+                        "{Site}",
+                        "öffne {Site}",
+                        "suche auf {Site}"
+                    ]
+                },
+                {
+                    "name": "Senti",
+                    "slots": [
+                        {
+                            "name": "number",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "Gefühl in {number}",
+                        "sentiment in {number}",
+                        "über {number}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Site",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "spiegel"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "welt"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "zeit"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "golem"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Activity",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "suche",
+                                "synonyms": [
+                                    "gucke nach",
+                                    "suche nach"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "fasse zusammen"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ließ"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Nummer",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "10",
+                                "synonyms": [
+                                    "zehnten",
+                                    "zehn"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "9",
+                                "synonyms": [
+                                    "neunten",
+                                    "neun"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "8",
+                                "synonyms": [
+                                    "achten",
+                                    "acht"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "7",
+                                "synonyms": [
+                                    "siebenten",
+                                    "sieben"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "6",
+                                "synonyms": [
+                                    "sechs",
+                                    "sechsten"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "5",
+                                "synonyms": [
+                                    "fünften",
+                                    "fünf"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "4",
+                                "synonyms": [
+                                    "vierten",
+                                    "vier"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "3",
+                                "synonyms": [
+                                    "dritten",
+                                    "drei"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "2",
+                                "synonyms": [
+                                    "zwei",
+                                    "zweiten"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "1",
+                                "synonyms": [
+                                    "ersten",
+                                    "eins"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

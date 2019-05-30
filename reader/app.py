@@ -111,22 +111,25 @@ def search_answer(number):
 
 
     links = util.get_session_value(session.attributes, "lastSearch")
-
+    
     # if the site uses relative links, make absolute ones
-    if "http" not in str(links):
+    if str(links).count("http") < len(links):
         newLinks = []
         for link in links:
             if "http" not in link:
                 newLinks.append(obj.baseURL + link)
+            else:
+                newLinks.append( link)
         links = newLinks
-
+    if int(number) > len(links):
+        return question("Dieser Artikel existiert leider nicht, versuchen Sie eine andere Nummer.")
     art = obj.read_headlines(links[int(number)-1])
     response = ""
     for element in art:
         response +=  element 
 
     session.attributes["lastCall"] = "search2"
-    return statement(response)
+    return question(response)
 
 
 @ask.intent('Senti', mapping={'number': 'Nummer'}, default={'number': 1})
@@ -144,6 +147,18 @@ def get_sentiment(number):
 
 
     links = util.get_session_value(session.attributes, "lastSearch")
+    # if the site uses relative links, make absolute ones
+    if str(links).count("http") < len(links):
+        newLinks = []
+        for link in links:
+            if "http" not in link:
+                newLinks.append(obj.baseURL + link)
+            else:
+                newLinks.append( link)
+        links = newLinks
+        
+    if int(number) > len(links):
+        return question("Dieser Artikel existiert leider nicht, versuchen Sie eine andere Nummer.")
 
     url = links[int(number)-1]
     NewsText = obj.read_article(url)
@@ -160,7 +175,7 @@ def get_sentiment(number):
     else:
             good = "nice" 
 
-    return statement(good)
+    return question(good)
 
 @ask.intent('AMAZON.HelpIntent')
 def help():
@@ -186,4 +201,4 @@ if __name__ == '__main__':
         if verify == 'false':
             app.config['ASK_VERIFY_REQUESTS'] = False
     
-    app.run(host='127.0.0.1',port=443)
+    app.run(host='127.0.0.1',port=5000)

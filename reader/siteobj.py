@@ -75,8 +75,8 @@ class Spiegel(Site):
     xPath = dict()
     xPath["searchArticle"] = '//div[@class="search-teaser"]/p/text()'
     xPath["searchLinks"] = '//div[@class="search-teaser"]/p//@href'
-    xPath["newsArticle"] = '//div[@class="column-wide pano_xxl"]//div[@class="teaser"]//h2[@class="article-title"]//span[@class="headline"]/text()'
-    xPath["newsLinks"] = '//div[@class="column-wide pano_xxl"]//div[@class="teaser"]//h2[@class="article-title"]//@href'
+    xPath["newsArticle"] = '//*[@class="teaser"]/div/h2/a/span[2]/text()'
+    xPath["newsLinks"] = '//*[@class="teaser"]/div/h2//@href'
     xPath["readHeadlineTitle"] = '//div[@class="column-both"]//span[@class="headline"]//text()'
     xPath["readHeadlineText"] = '//div[@class="column-both"]/p/strong/text()'
-    xPath["readArticleText"] = '//div[@class="article-section clearfix"]/p/text()'
+    xPath["readArticleText"] = '//*[@id="js-article-column"]/div/p[1]/text()'
