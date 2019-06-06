@@ -1,0 +1,7 @@
+requests
+flask
+lxml
+gunicorn
+numpy
+nltk
+textblob-de

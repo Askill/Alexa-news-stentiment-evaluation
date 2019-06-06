@@ -8,8 +8,8 @@ from textblob_de import TextBlobDE as TextBlob
 import siteobj as site2
 import util
 
-app = Flask(__name__)
-ask = Ask(app, "/")
+application = Flask(__name__)
+ask = Ask(application, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 ###           ###
@@ -200,6 +200,6 @@ if __name__ == '__main__':
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
-            app.config['ASK_VERIFY_REQUESTS'] = False
+            application.config['ASK_VERIFY_REQUESTS'] = False
     
-    app.run(host='127.0.0.1',port=5000)
+    application.run(host='127.0.0.1',port=80)
