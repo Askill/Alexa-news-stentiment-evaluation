@@ -74,7 +74,8 @@ def search_for(searchTerm):
 
 @ask.intent('News', mapping={'site': 'Site'}, default={'site': ''})
 def news(site):
-    site = util.get_session_value(session.attributes, "siteName")
+    session.attributes["siteName"] = site
+    #site = util.get_session_value(session.attributes, "siteName")
 
     if site is not None:
         obj = get_site_obj(site) 
