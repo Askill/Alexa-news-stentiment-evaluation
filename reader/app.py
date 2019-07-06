@@ -2,7 +2,6 @@ import logging
 import os
 from flask import Flask
 from flask_ask import Ask, request, session, question, statement
-import yaml
 from nltk.corpus import treebank
 from textblob_de import TextBlobDE as TextBlob
 import siteobj as site2
@@ -69,14 +68,12 @@ def search_for(searchTerm):
     else:
         return question("Dazu konnte nichts gefunden werden. Möchten Sie nach etwas anderem Suchen?")
 
-
-    return question(response + "noch etwas?")
+    return question(response + " noch etwas?")
 
 @ask.intent('News', mapping={'site': 'Site'}, default={'site': ''})
 def news(site):
     session.attributes["siteName"] = site
-    #site = util.get_session_value(session.attributes, "siteName")
-
+    
     if site is not None:
         obj = get_site_obj(site) 
     else:
@@ -106,10 +103,8 @@ def search_answer(number):
     else:
         session.attributes["lastCall"] = "search_answer"
         return question("Wonach wollen Sie suchen?")
-
     if obj is None: # should never be called
         return question("Error. Wonach wollen Sie suchen?")
-
 
     links = util.get_session_value(session.attributes, "lastSearch")
     
@@ -122,9 +117,12 @@ def search_answer(number):
             else:
                 newLinks.append( link)
         links = newLinks
+
     if int(number) > len(links):
         return question("Dieser Artikel existiert leider nicht, versuchen Sie eine andere Nummer.")
+
     art = obj.read_headlines(links[int(number)-1])
+
     response = ""
     for element in art:
         response +=  element 
@@ -132,7 +130,7 @@ def search_answer(number):
     session.attributes["lastCall"] = "search2"
     return question(response)
 
-
+# https://github.com/markuskiller/textblob-de
 @ask.intent('Senti', mapping={'number': 'Nummer'}, default={'number': 1})
 def get_sentiment(number):
     site = util.get_session_value(session.attributes, "siteName")
@@ -172,11 +170,16 @@ def get_sentiment(number):
     sent = newText.sentiment[0] 
 
     if sent < 0:
-            good = "shit"
+            good = "eher negativ"
     else:
-            good = "nice" 
+            good = "positiv" 
 
-    return question(good)
+    return question("Das Sentiment ist " + good)
+
+
+###              ###
+#     DEFUALT      #
+###              ###
 
 @ask.intent('AMAZON.HelpIntent')
 def help():
@@ -195,6 +198,10 @@ def launch():
 def session_ended():
     return "{}", 200
 
+###              ###
+#       INIT       #
+###              ###
+
 
 if __name__ == '__main__':
     if 'ASK_VERIFY_REQUESTS' in os.environ:
@@ -202,4 +209,4 @@ if __name__ == '__main__':
         if verify == 'false':
             application.config['ASK_VERIFY_REQUESTS'] = False
     
-    application.run(host='127.0.0.1',port=80)
+    application.run(host='0.0.0.0',port=80)
